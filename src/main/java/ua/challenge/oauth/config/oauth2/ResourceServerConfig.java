@@ -16,7 +16,15 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/users2/**")
-                .access("#oauth2.hasScope('read') and hasRole('ADMIN')");
+                .access("#oauth2.hasScope('read') and hasRole('ADMIN')")
+        /*http
+                .authorizeRequests()
+                    .antMatchers(HttpMethod.GET,"/users2/**")
+                        .access("#oauth2.hasScope('read') and hasRole('ADMIN')")
+                    .anyRequest().authenticated()
+                .and()
+                    .formLogin().permitAll()*/
+        ;
     }
 
     @Override

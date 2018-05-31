@@ -11,4 +11,8 @@ public class OAuth2TokenResponse {
     private long expires_in;
     private String scope;
     private String refresh_token;
+
+    private String phone;
+    private String email;
+    private String jti;
 }

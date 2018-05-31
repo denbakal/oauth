@@ -15,7 +15,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(final HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/users2/**")
+                .antMatchers(HttpMethod.GET,"/users/**")
                 .access("#oauth2.hasScope('read') and hasRole('ADMIN')")
         /*http
                 .authorizeRequests()

@@ -10,14 +10,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ua.challenge.oauth.config.oauth2.jwt.CustomEnhancer;
+import ua.challenge.oauth.config.oauth2.jwt.converter.CommonUserAuthenticationConverter;
 
 import java.util.Arrays;
 
@@ -81,7 +78,7 @@ public class AuthorizationServerConfigInMemory extends AuthorizationServerConfig
                     .and()
                 .withClient("clientPasswordId")
                     .authorizedGrantTypes("password", "refresh_token")
-//                    .secret("secret")
+                    .secret("secret")
                     .scopes("read")
                     .accessTokenValiditySeconds(120)
                     .refreshTokenValiditySeconds(300)
@@ -96,6 +93,11 @@ public class AuthorizationServerConfigInMemory extends AuthorizationServerConfig
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+
+        DefaultAccessTokenConverter defaultAccessTokenConverter = new DefaultAccessTokenConverter();
+        defaultAccessTokenConverter.setUserTokenConverter(new CommonUserAuthenticationConverter());
+
+        converter.setAccessTokenConverter(defaultAccessTokenConverter);
         converter.setSigningKey("1234567890");
         return converter;
     }

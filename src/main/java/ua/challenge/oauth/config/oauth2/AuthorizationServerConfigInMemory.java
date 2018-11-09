@@ -5,11 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -23,6 +25,9 @@ import java.util.Arrays;
 public class AuthorizationServerConfigInMemory extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private ClientDetailsService clientDetailsService;
 
     /*
      * Defines the security constraints on the token endpoint.
@@ -68,7 +73,7 @@ public class AuthorizationServerConfigInMemory extends AuthorizationServerConfig
                     .authorizedGrantTypes("client_credentials")
                     .scopes("read")
                     .secret("secret")
-                    .accessTokenValiditySeconds(1200)
+                    .accessTokenValiditySeconds(30)
                     .and()
                 .withClient("clientAuthCodeId")
                     .authorizedGrantTypes("authorization_code")
@@ -116,6 +121,13 @@ public class AuthorizationServerConfigInMemory extends AuthorizationServerConfig
         defaultTokenServices.setTokenStore(tokenStore());
         defaultTokenServices.setSupportRefreshToken(true);
         defaultTokenServices.setTokenEnhancer(tokenEnhancerChain());
+        defaultTokenServices.setClientDetailsService(clientDetailsService);
         return defaultTokenServices;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Bean
+    public static NoOpPasswordEncoder passwordEncoder() {
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 }

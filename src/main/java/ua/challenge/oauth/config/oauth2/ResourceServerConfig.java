@@ -17,18 +17,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/users2/**")
                 .access("#oauth2.hasScope('read') and hasRole('ADMIN')")
-        /*http
-                .authorizeRequests()
-                    .antMatchers(HttpMethod.GET,"/users2/**")
-                        .access("#oauth2.hasScope('read') and hasRole('ADMIN')")
-                    .anyRequest().authenticated()
-                .and()
-                    .formLogin().permitAll()*/
         ;
     }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources.resourceId("ir");
+        resources.resourceId("demo");
     }
 }

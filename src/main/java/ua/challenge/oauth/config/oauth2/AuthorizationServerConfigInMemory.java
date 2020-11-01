@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -40,6 +42,7 @@ public class AuthorizationServerConfigInMemory extends AuthorizationServerConfig
 //        oauthServer.allowFormAuthenticationForClients();
         oauthServer
                 .tokenKeyAccess("permitAll()")
+                .allowFormAuthenticationForClients()
                 .checkTokenAccess("isAuthenticated()");
     }
 
@@ -64,24 +67,25 @@ public class AuthorizationServerConfigInMemory extends AuthorizationServerConfig
                     .authorizedGrantTypes("implicit")
                     .scopes("read")
                     .autoApprove(true)
-                    .secret("secret")
+                    .secret("$2a$11$qgXWs4wesfN7ZPb3/UtecugB53WZMxoVRfzQcm0EwZPShnE/9mGNe")
                     .accessTokenValiditySeconds(3600)
                     .and()
                 .withClient("clientCredentialsId")
                     .authorizedGrantTypes("client_credentials")
                     .scopes("read")
-                    .secret("secret")
+                    .autoApprove(true)
+                    .secret("$2a$11$qgXWs4wesfN7ZPb3/UtecugB53WZMxoVRfzQcm0EwZPShnE/9mGNe")
                     .accessTokenValiditySeconds(1200)
                     .and()
                 .withClient("clientAuthCodeId")
                     .authorizedGrantTypes("authorization_code")
                     .scopes("read")
-                    .secret("secret")
+                    .secret("$2a$11$qgXWs4wesfN7ZPb3/UtecugB53WZMxoVRfzQcm0EwZPShnE/9mGNe")
                     .accessTokenValiditySeconds(2400)
                     .and()
                 .withClient("clientPasswordId")
                     .authorizedGrantTypes("password", "refresh_token")
-//                    .secret("secret")
+                    .secret("$2a$11$qgXWs4wesfN7ZPb3/UtecugB53WZMxoVRfzQcm0EwZPShnE/9mGNe")
                     .scopes("read")
                     .accessTokenValiditySeconds(120)
                     .refreshTokenValiditySeconds(300)
